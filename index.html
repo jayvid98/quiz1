@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-73B0850NQE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-73B0850NQE');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Module 1 & 2 MEGA Quiz — End of Life, Loss & Grief</title>
@@ -100,9 +108,58 @@ main{max-width:1000px;margin:0 auto;padding:22px 16px 80px;}
 .rbst span{font-size:10px;color:#8ab2d8;text-transform:uppercase;letter-spacing:1px;}
 .rbc strong{color:#5dd6c8;}.rbw strong{color:#f78b89;}
 @media(max-width:600px){.qt{font-size:14px;}.snav{gap:4px;}.nright{width:100%;justify-content:flex-end;}.fc{font-size:10px;padding:4px 8px;}}
+
+/* ── PASSCODE LOCK SCREEN ── */
+#lock-screen{position:fixed;inset:0;background:linear-gradient(135deg,#0b2545 0%,#1a3560 55%,#0a5060 100%);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;}
+#lock-screen.hidden{display:none;}
+.lock-box{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.15);border-radius:24px;padding:40px 36px 36px;display:flex;flex-direction:column;align-items:center;gap:20px;width:320px;max-width:90vw;box-shadow:0 24px 60px rgba(0,0,0,.4);}
+.lock-icon{font-size:44px;animation:pulseIn .5s ease;}
+.lock-title{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;color:#fff;letter-spacing:.5px;}
+.lock-sub{font-family:'Nunito',sans-serif;font-size:12px;color:#7eb8f0;letter-spacing:1px;text-transform:uppercase;margin-top:-10px;}
+.lock-dots{display:flex;gap:14px;height:14px;align-items:center;}
+.lock-dot{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.35);background:transparent;transition:all .2s;}
+.lock-dot.filled{background:#5dd6c8;border-color:#5dd6c8;box-shadow:0 0 8px rgba(93,214,200,.6);}
+.lock-dot.error{background:#f78b89;border-color:#f78b89;animation:shake .4s ease;}
+.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;}
+.num-btn{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.15);border-radius:12px;color:#fff;font-family:'Nunito',sans-serif;font-size:20px;font-weight:800;padding:16px 0;cursor:pointer;transition:all .15s;user-select:none;}
+.num-btn:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.35);transform:scale(1.05);}
+.num-btn:active{transform:scale(.95);background:rgba(93,214,200,.25);}
+.num-btn.del-btn{font-size:18px;color:#a0c4e8;}
+.num-btn.zero-btn{grid-column:2;}
+.lock-err{font-family:'Nunito',sans-serif;font-size:12px;color:#f78b89;font-weight:700;min-height:16px;letter-spacing:.5px;opacity:0;transition:opacity .3s;}
+.lock-err.show{opacity:1;}
+@keyframes shake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-6px);}40%,80%{transform:translateX(6px);}}
 </style>
 </head>
 <body>
+
+<div id="lock-screen">
+  <div class="lock-box">
+    <div class="lock-icon">🔐</div>
+    <div class="lock-title">PNVN1631 Quiz</div>
+    <div class="lock-sub">Enter passcode to continue</div>
+    <div class="lock-dots">
+      <div class="lock-dot" id="d0"></div>
+      <div class="lock-dot" id="d1"></div>
+      <div class="lock-dot" id="d2"></div>
+      <div class="lock-dot" id="d3"></div>
+    </div>
+    <div class="lock-err" id="lock-err">Incorrect passcode</div>
+    <div class="numpad">
+      <button class="num-btn" onclick="pressNum('1')">1</button>
+      <button class="num-btn" onclick="pressNum('2')">2</button>
+      <button class="num-btn" onclick="pressNum('3')">3</button>
+      <button class="num-btn" onclick="pressNum('4')">4</button>
+      <button class="num-btn" onclick="pressNum('5')">5</button>
+      <button class="num-btn" onclick="pressNum('6')">6</button>
+      <button class="num-btn" onclick="pressNum('7')">7</button>
+      <button class="num-btn" onclick="pressNum('8')">8</button>
+      <button class="num-btn" onclick="pressNum('9')">9</button>
+      <button class="num-btn zero-btn" onclick="pressNum('0')">0</button>
+      <button class="num-btn del-btn" onclick="pressDelete()">⌫</button>
+    </div>
+  </div>
+</div>
 <header>
   <div class="hdr">
     <div class="hdr-icon">🏥</div>
@@ -130,6 +187,7 @@ main{max-width:1000px;margin:0 auto;padding:22px 16px 80px;}
   <button class="fc" data-f="m2">Module 2</button>
   <button class="fc" data-f="eaq25">📋 EAQ Ch.25</button>
   <button class="fc" data-f="eaq40">📋 EAQ Ch.40</button>
+  <button class="fc" data-f="teacher">💉 Teacher Notes</button>
   <button class="fc" data-f="unanswered">Unanswered</button>
   <button class="fc" data-f="wrong">Wrong Only</button>
   <div class="nright">
@@ -313,7 +371,7 @@ function showResults(cor,wr){
 
 function applyFilter(){
   const f=cf;
-  document.querySelectorAll('.qc').forEach(c=>{const qid=+c.dataset.id;const mod=c.dataset.mod;const s=state[qid]||{};let show=true;if(f==='m1')show=mod==='m1';else if(f==='m2')show=mod==='m2';else if(f==='eaq25')show=mod==='eaq25';else if(f==='eaq40')show=mod==='eaq40';else if(f==='unanswered')show=!s.submitted;else if(f==='wrong')show=s.submitted&&!s.correct;c.style.display=show?'':'none';});
+  document.querySelectorAll('.qc').forEach(c=>{const qid=+c.dataset.id;const mod=c.dataset.mod;const s=state[qid]||{};let show=true;if(f==='m1')show=mod==='m1';else if(f==='m2')show=mod==='m2';else if(f==='eaq25')show=mod==='eaq25';else if(f==='eaq40')show=mod==='eaq40';else if(f==='teacher')show=mod==='teacher';else if(f==='unanswered')show=!s.submitted;else if(f==='wrong')show=s.submitted&&!s.correct;c.style.display=show?'':'none';});
   document.querySelectorAll('.obj-banner').forEach(b=>{const ob=b.dataset.ob;const any=[...document.querySelectorAll('.qc')].some(c=>{const q=QS.find(x=>x.id===+c.dataset.id);return q&&q.obj===ob&&c.style.display!=='none';});b.style.display=any?'':'none';});
 }
 
@@ -398,7 +456,81 @@ OBJS.push(
   {key:'EAQ Ch.25',mod:'eaq25',label:'📋 EAQ Homework — Ch.25 Loss, Grief, Dying & Death',desc:'Elsevier EAQ homework questions — Chapter 25 (exact exam-style questions from class)',icon:'📋',cc:'#0a5060',cb:'#e0f5f2'},
   {key:'EAQ Ch.40',mod:'eaq40',label:'📋 EAQ Homework — Ch.40 Hospice Care',desc:'Elsevier EAQ homework questions — Chapter 40 (exact exam-style questions from class)',icon:'📋',cc:'#134a8e',cb:'#e8f0fe'}
 );
+// ── Teacher Transcript Questions ──
+[
+{id:155,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'What is a "comfort pack" in hospice care?',opts:['A gift bag provided to families after death','A pre-packaged set of medications readily available for hospice patients in the active dying phase — reordered every couple of days','A basket of personal items for patient comfort','A set of non-pharmacological tools only (massage oils, music)'],ans:1,explain:'A comfort pack = a pre-packaged set of medications for hospice patients, especially in the active dying phase. Can be reordered every few days due to around-the-clock administration needs. Covered by Medicare. (Teacher notes)'},
+{id:156,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'Before administering an opiate or narcotic to a dying patient, which assessment is REQUIRED?',opts:['Blood pressure must be above 90 systolic','Respiratory rate must be AT LEAST 12 breaths per minute','Patient must be awake and oriented','Family must give verbal consent'],ans:1,explain:'CRITICAL SAFETY RULE: A minimum respiratory rate of 12 is required before administering opiates/narcotics. Administering with a respiratory rate below 12 could be considered euthanasia (causes respiratory depression). (Teacher notes)'},
+{id:157,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'A hospice nurse needs to reposition a patient in significant pain. What should be done FIRST?',opts:['Move the patient quickly to minimize exposure to pain','Administer pain medication (pre-medicate) BEFORE moving','Ask family to hold the patient during repositioning','Wait until pain medication scheduled time to reposition'],ans:1,explain:'Pre-medication: administer pain medication (opiates/narcotics) BEFORE moving the patient. This is crucial to minimize discomfort. Handle with extreme gentleness. (Teacher notes)'},
+{id:158,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'Morphine Sulfate MSIR (Instant Release) in a comfort pack is typically started at which dose and via which route?',opts:['30 mg orally every 6 hours','7.5 mg sublingual; effects within approximately 15 minutes','15 mg IV push; effects immediate','2 mg intramuscular every 4 hours'],ans:1,explain:'Morphine MSIR: starting dose typically 7.5 mg, given SUBLINGUALLY (under the tongue) for faster absorption and cost-effectiveness vs. injectables. Effects felt within ~15 minutes. Doses are titrated based on patient response. (Teacher notes)'},
+{id:159,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'Levsin (Hyoscyamine) is included in the comfort pack primarily to:',opts:['Manage severe pain','Reduce secretions (death rattle) and act as an antispasmodic for GI cramping','Treat fever and headache','Provide sedation for terminal agitation'],ans:1,explain:'Levsin (Hyoscyamine): primary function = reduce secretions (addresses the death rattle). Secondary = antispasmodic (helps with GI cramping and diarrhea by slowing peristalsis). Can be given every 1–2 hours as needed. (Teacher notes)'},
+{id:160,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'Lorazepam is given to a hospice patient sublingually at 0.5 mg. What is the PRIMARY purpose?',opts:['Pain management — it is an opioid','To manage anxiety, which can manifest as shortness of breath or general distress; aids in relaxation','To reduce secretions in the airway','To treat depression and grief'],ans:1,explain:'Lorazepam (anti-anxiety): manages anxiety that can manifest as SOB or general distress, aids relaxation. Given sublingually at 0.5 mg. Still beneficial even when patient has reached the ACCEPTANCE stage of dying. (Teacher notes)'},
+{id:161,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'A dying patient can no longer swallow and develops a fever. Which medication and route is appropriate?',opts:['Aspirin orally','Ibuprofen IV','Acetaminophen (Tylenol) administered RECTALLY','Acetaminophen sublingually'],ans:2,explain:'Tylenol (Acetaminophen) is administered RECTALLY when a patient cannot swallow — avoids oral administration. Purpose: manage fevers that can spike significantly in patients with impaired brain function at end of life. (Teacher notes)'},
+{id:162,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'MS Contin (Morphine Sulfate Continuous) is best described as:',opts:['Instant release morphine given sublingually','A time-released formulation of morphine sulfate — has a coating designed for gradual release every 12 hours','IV morphine given by continuous infusion pump','A non-opioid alternative to morphine'],ans:1,explain:'MS Contin = time-released morphine sulfate. Can be given to patients who are alert, oriented, and capable of swallowing. Starting dose typically 15 mg every 12 hours; peak effect ~6 hours after administration. (Teacher notes)'},
+{id:163,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'Breakthrough pain is defined as:',opts:['Pain that occurs only at night','A sudden, acute increase in pain experienced despite being on a regular pain management regimen','Pain that is unresponsive to all medications','Pain that occurs only with movement'],ans:1,explain:'Breakthrough pain = a sudden, acute increase in pain despite regular pain management. Managed with PRN orders every 4–6 hours when still oral. If 3–4 breakthrough episodes occur over several days, the routine dosing schedule needs titration. (Teacher notes)'},
+{id:164,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'A hospice nurse documents three breakthrough pain episodes in two days for a patient on MS Contin 15 mg q12h. What adjustment is indicated?',opts:['Switch to a non-opioid medication immediately','Discontinue the MS Contin — it is not working','Titrate the dose — increase frequency (e.g., change to q8h: 15 mg q8h = 45 mg/day) or increase dose','Do nothing — breakthrough pain is expected and acceptable'],ans:2,explain:'3–4 breakthrough episodes = routine schedule needs adjustment. Titrate: change from q12h to q8h (15 mg q8h = 45 mg/day). Further breakthrough → increase to 30 mg q8h (60 mg/day). Goal: narrow the gap between doses. Morphine has NO CEILING as long as RR ≥ 12. (Teacher notes)'},
+{id:165,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'A patient can no longer swallow (NPO status). Which alternative routes can be used to continue pain management? (Select ALL that apply)',opts:['Sublingual (under the tongue)','Transdermal patch','Oral tablets crushed and mixed with water','Continue oral medications — NPO only applies to food'],ans:[0,1],multi:true,explain:'When a patient goes NPO: switch to SUBLINGUAL (bypasses swallowing, absorbs directly into bloodstream) or TRANSDERMAL PATCH. Oral medications cannot be given if the patient cannot swallow. (Teacher notes)'},
+{id:166,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'A nurse is applying a fentanyl transdermal patch to a hospice patient. Which safety precautions are REQUIRED? (Select ALL that apply)',opts:['Wear GLOVES to prevent accidental absorption through caregiver&#39;s skin','Apply to a clean area of skin','Rotate patch sites with each application','Change the patch every 3 days','Place patch over old patch location for consistent absorption'],ans:[0,1,2,3],multi:true,explain:'Fentanyl patch safety: (1) WEAR GLOVES — prevents accidental caregiver absorption; (2) clean skin area; (3) ROTATE SITES — prevents skin irritation; (4) change every 3 DAYS. Do NOT reuse old sites. (Teacher notes)'},
+{id:167,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'Which patients are BEST candidates for the fentanyl transdermal patch?',opts:['Patients who are alert and eating well','Patients eating less than 10–30% of their food intake who need continuous pain relief and may be unable to manage oral medications','Patients with mild pain controlled on acetaminophen','Patients with neuropathic pain only'],ans:1,explain:'Fentanyl patches are for patients eating less than 10–30% of food intake — indicating difficulty managing oral medications and a need for continuous, consistent pain relief. Dosage range: 12.5–100 mcg; changed every 3 days. (Teacher notes)'},
+{id:168,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'In palliative care, losing more than how many pounds in a month is considered reportable?',opts:['2 lbs','5 lbs','10 lbs','15 lbs'],ans:1,explain:'Losing more than 5 POUNDS IN A MONTH is reportable in palliative care — indicates a potential underlying issue with swallowing, eating, or nutrient utilization. May signal disease progression or need for hospice evaluation. (Teacher notes)'},
+{id:169,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'A dying patient is "grabbing in the air" and appears to be talking to people who are not present. The nurse BEST recognizes this as:',opts:['A sign of medication overdose requiring intervention','A psychiatric emergency requiring restraints','A normal near-death phenomenon — may be interpreted as hallucinations or calls for spiritual figures. Provide comfort and reassurance.','Severe hypoxia requiring emergency oxygen therapy'],ans:2,explain:'Grabbing in the air / talking to unseen individuals = a normal near-death behavior. NOT a medication emergency or psychiatric crisis. Provide comfort, gentle reassurance, ensure patient is not in pain, and educate the family. (Teacher notes)'},
+{id:170,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'An elderly dying patient begins giving away her prized possessions to family members. The nurse recognizes this as:',opts:['A sign of financial irresponsibility requiring a social work consult','An indicator of the ACCEPTANCE stage of dying — the patient is ready and has made peace','A sign of dementia','A red flag for suicidal ideation — immediate psychiatric evaluation is needed'],ans:1,explain:'In an ELDERLY dying patient: giving away prized possessions = sign of ACCEPTANCE — they are ready and have come to terms with mortality. HOWEVER, in YOUNGER individuals, this behavior = RED FLAG for suicidal ideation and requires further assessment. (Teacher notes)'},
+{id:171,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'Somnolence is defined as:',opts:['Difficulty falling or staying asleep','Excessive sleepiness or drowsiness — patient may sleep more than usual','Confusion and disorientation during the night','Restless leg syndrome'],ans:1,explain:'Somnolence = excessive sleepiness or drowsiness. Patients experiencing somnolence sleep more than usual. Common in advanced illness and may be caused by disease progression, medications, or metabolic changes. DIFFERENT from insomnia. (Teacher notes)'},
+{id:172,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'A hospice patient who was expected to decline soon appears more alert, is eating better, and family reports he seems much improved. The nurse recognizes this as:',opts:['A sign that the hospice diagnosis was wrong and treatment should resume','A "rally" — a temporary improvement often seen in hospice due to attentive care, hydration, and medication; typically short-term with eventual decline','A permanent recovery requiring discharge from hospice','A medication side effect requiring dose reduction'],ans:1,explain:'"Rally" = temporary improvement in hospice patients due to attentive care, hydration, and medication. Appears healthier than anticipated — but typically SHORT-TERM with patients eventually declining. Families may delay hospice due to guilt, later regretting the delay. (Teacher notes)'},
+{id:173,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'Which was the FIRST state in the US to legalize physician-assisted suicide?',opts:['California','Washington','Oregon','Montana'],ans:2,explain:'Oregon was the FIRST state to legalize physician-assisted suicide. The case of Brittany Maynard (brain cancer) — who had to travel to Oregon to use its laws — later contributed to California legalizing physician-assisted suicide through her mother&#39;s advocacy. (Teacher notes)'},
+{id:174,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'Which organs and tissues can be donated? (Select ALL that apply)',opts:['Heart','Cornea (for eyesight restoration)','Skin','Liver','Pancreas'],ans:[0,1,2,3,4],multi:true,explain:'ALL five can be donated: heart, cornea (restores eyesight — requires eye tissue from deceased donor), skin, liver, and pancreas. Donated organs can save or improve the lives of multiple recipients. Consent: signing back of driver&#39;s license is a common method. (Teacher notes)'},
+{id:175,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'Morphine has a "ceiling" for dosage in terminal cancer pain management. TRUE or FALSE?',opts:['TRUE — there is a maximum safe dose of morphine for all patients','FALSE — morphine has NO ceiling as long as the patient&#39;s respiratory rate can tolerate it (RR ≥ 12)','TRUE — morphine should never exceed 30 mg per day','FALSE — morphine has no ceiling but cannot be used when the patient is NPO'],ans:1,explain:'IMPORTANT: "No ceiling" for morphine in cancer/terminal pain as long as the patient&#39;s RR ≥ 12. This is why titration is possible — doses can be increased to control pain regardless of absolute dose amount. The ONLY limit is respiratory tolerance. (Teacher notes)'},
+{id:176,mod:'teacher',obj:'Teacher Notes',cat:'💉 Teacher Notes — Pharmacology & Clinical',cc:'#1a3560',cb:'#e8eef8',q:'Glycerin suppositories are used in end-of-life care to address which symptom?',opts:['Fever','Nausea and vomiting','Constipation when oral medications cannot be given','Respiratory secretions'],ans:2,explain:'Glycerin suppositories are used for CONSTIPATION MANAGEMENT in dying patients who cannot take oral medications. Part of the overall comfort care approach to managing GI symptoms at end of life. (Teacher notes)'}
+].forEach(q=>QS.push(q));
+OBJS.push(
+  {key:'Teacher Notes',mod:'teacher',label:'💉 Teacher Transcript — Pharmacology & Clinical Details',desc:'Content from teacher lecture notes: comfort pack meds, opioid rules, MS Contin titration, fentanyl patch, and clinical scenarios',icon:'💉',cc:'#1a3560',cb:'#e8eef8'}
+);
 buildAll();
+</script>
+
+<script>
+var PASSCODE='2027';
+var entered='';
+function pressNum(n){
+  if(entered.length>=4)return;
+  entered+=n;
+  updateLockDots();
+  if(entered.length===4){setTimeout(checkLockCode,150);}
+}
+function pressDelete(){
+  entered=entered.slice(0,-1);
+  updateLockDots();
+  document.getElementById('lock-err').classList.remove('show');
+}
+function updateLockDots(){
+  for(var i=0;i<4;i++){
+    var dot=document.getElementById('d'+i);
+    dot.classList.remove('filled','error');
+    if(i<entered.length)dot.classList.add('filled');
+  }
+}
+function checkLockCode(){
+  if(entered===PASSCODE){
+    document.getElementById('lock-screen').classList.add('hidden');
+  } else {
+    for(var i=0;i<4;i++){
+      var dot=document.getElementById('d'+i);
+      dot.classList.remove('filled');
+      dot.classList.add('error');
+    }
+    document.getElementById('lock-err').classList.add('show');
+    setTimeout(function(){
+      entered='';
+      updateLockDots();
+      for(var i=0;i<4;i++)
+        document.getElementById('d'+i).classList.remove('error');
+    },800);
+  }
+}
+document.addEventListener('keydown',function(e){
+  if(document.getElementById('lock-screen').classList.contains('hidden'))return;
+  if(e.key>='0'&&e.key<='9')pressNum(e.key);
+  if(e.key==='Backspace')pressDelete();
+});
 </script>
 </body>
 </html>
